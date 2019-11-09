@@ -1,493 +1,256 @@
-#include <iostream>
-#include <experimental/array>
-#include <tuple>
-#include <type_traits>
-#include <vector>
-#include <cstring>
-#include <cctype>
 /*
-  Write a C++ function named apply_all 
-   * that expects two arrays of integers and their sizes 
-   * and dynamically allocates a new array of integers 
-   * whose size is the product of the 2 array sizes
-  
-   * The function should loop through the second array
-   * and multiplies each element across each element of array 1 
-   * and store the product in the newly created array.
-  
-  The function should return a pointer to the newly allocated array.
-   * You can also write a print function
-   * that expects a pointer to an array of integers 
-   * and its size and display the elements in the array.
+ * This is the final version of this challenge to modularize a previous program.  I've learned that functions cannot "see" into functions, 
+ * so things with variables that need to be used by all cannot be discretely modularized.  Utility functions can be modularized
+ * within the functions though, like input validation, menu display.  But functionality has to be consolidated into one function.
+ * Basically it is the "main()" function we've been using up to this point.  Instead I have just renamed it and something else,
+then called it into the actual main() function. 
+ * 
+ * 
  */
- 
+
+#include <iostream>
+#include <vector>
+#include <bits/stdc++.h> 
+#include <climits>
+#include <stdbool.h>
 
 using namespace std;
 
-const size_t Uno_size{5};
-const size_t Does_size{3};
+void machine();
+void ill_fate();
+void get_nums(vector<int> &crunch);
+void menu_sel();
+void handle_add(vector<int> &crunch);
+void handle_find(const vector<int> &crunch);
+void handle_total(const vector<int> &crunch);
+void handle_printr(const vector<int> &crunch);
+void handle_mean(const vector<int> &crunch);
+void handle_smallest(const vector<int> &crunch);
+void handle_largest(const vector<int> &crunch);
+int get_total(const vector<int> &crunch);
+int calculate_mean(const vector<int> &crunch);
+int get_smallest(const vector<int> &crunch);
 
-//Arrays initialized to zero.
-int Uno[]{0,0,0,0,0};
-int Does[]{0,0,0};
-
-int *apply_all(int[], const size_t, int[], const size_t);
-
-void welcome_seekers();
-
-void call_Uno_0(int);
-void call_Uno_1(int);
-void call_Uno_2(int);
-void call_Uno_3(int);
-void call_Uno_4(int);
-
-void call_Does_0(int);
-void call_Does_1(int);
-void call_Does_2(int);
-//First array.
-int response_one_0();
-int response_one_1();
-int response_one_2();
-int response_one_3();
-int response_one_4();
-//Second array.
-int response_two_0();
-int response_two_1();
-int response_two_2();
-
-void call_Uno_0(int value){
-	cout << "[ ";
-	Uno[0] = value;
-	for(size_t i = 0; i < Uno_size; i++){
-		cout << Uno[i] << " ";
-	}
-	cout << "]" << " ";
-}
-
-void call_Uno_1(int value){
-	cout << "[ ";
-	Uno[1] = value;
-	for(size_t i = 0; i < Uno_size; i++){
-		cout << Uno[i] << " ";
-	}
-	cout << "]" << " ";
-}
-
-void call_Uno_2(int value){
-	cout << "[ ";
-	Uno[2] = value;
-	for(size_t i = 0; i < Uno_size; i++){
-		cout << Uno[i] << " ";
-	}
-	cout << "]" << " ";
-}
-
-void call_Uno_3(int value){
-	cout << "[ ";
-	Uno[3] = value;
-	for(size_t i = 0; i < Uno_size; i++){
-		cout << Uno[i] << " ";
-	}
-	cout << "]" << " ";
-}
-
-void call_Uno_4(int value){
-	cout << "[ ";
-	Uno[4] = value;
-	for(size_t i = 0; i < Uno_size; i++){
-		cout << Uno[i] << " ";
-	}
-	cout << "]" << " ";
-}
-
-void call_Does_0(int value){
-	cout << "[ ";
-	Does[0] = value;
-	for(size_t i = 0; i < Does_size; i++){
-		cout << Does[i] << " ";
-	}
-	cout << "]" << " ";
-}
-
-void call_Does_1(int value){
-	cout << "[ ";
-	Does[1] = value;
-	for(size_t i = 0; i < Does_size; i++){
-		cout << Does[i] << " ";
-	}
-	cout << "]" << " ";
-}
-
-void call_Does_2(int value){
-	cout << "[ ";
-	Does[2] = value;
-	for(size_t i = 0; i < Does_size; i++){
-		cout << Does[i] << " ";
-	}
-	cout << "]" << " ";
-}
-//First array.
-int response_one_0(){
-		cout << "\n   q__ (@?@) __p --  Working hard or hardly working?" << endl;
-		char response[50]{};
-		char temp[50]{};
-		char control[50]{"HARDLY WORKING"};
-		char control2[50]{"WORKING HARD"};
-		int calcvalue{};
-		
-		cin.getline(response, 50);		
-		
-		for(size_t i{0}; i < strlen(response); ++i) {
-          if(isalpha(response[i]))
-              response[i] = toupper(response[i]);
-		}
-      //cout << "--------------------------------" << endl;
-      strcpy(temp, response);
-
-      if(strcmp(temp, control) == 0){
-		  calcvalue = sizeof(response) - 10;
-		  //cout << "Value is: " << calcvalue << endl;
-	  }  
-		else if(strcmp(temp, control2) == 0){
-			  calcvalue = sizeof(response) - 20;
-		  }
-
-	   else
-		  calcvalue = sizeof(response) - 47;
-		  //cout << "value is: " << calcvalue << endl;
-		  
-	  call_Uno_0(calcvalue);
-      //cout << "--------------------------------" << endl;
-
-return calcvalue;
-}
-
-int response_one_1(){
-		cout << "\n   q__ (@?@) __p -- Do you believe in: life after love or love after life? " << endl;
-		cout << "\n type: (life after love) or (love after life)" << endl;
-		char response[50]{};
-		char temp[50]{};
-		char control[50]{"LIFE AFTER LOVE"};
-		char control2[50]{"LOVE AFTER LIFE"};
-		int calcvalue{};
-		
-		cin.getline(response, 50);		
-		
-		for(size_t i{0}; i < strlen(response); ++i) {
-          if(isalpha(response[i]))
-              response[i] = toupper(response[i]);
-		}
-      //cout << "--------------------------------" << endl;
-      strcpy(temp, response);
-
-      if(strcmp(temp, control) == 0){
-		  calcvalue = sizeof(response) - 5;
-		  //cout << "Value is: " << calcvalue << endl;
-
-	  } 
-	  else if(strcmp(temp, control2) == 0){
-			  calcvalue = sizeof(response) - 15;
-		  }
-	  else
-		  calcvalue = sizeof(response) - 27;
-		  //cout << "value is: " << calcvalue << endl;
-		  
-	  call_Uno_1(calcvalue);
-      //cout << "--------------------------------" << endl;
-return calcvalue;
-}
-
-int response_one_2(){
-		cout << "\n   q__ (@?@) __p -- Death before dishonor or pride before the fall?" << endl;
-		cout << "\n type: (dishonor) or (pride)" << endl;
-		char response[50]{};
-		char temp[50]{};
-		char control[50]{"DISHONOR"};
-		char control2[50]{"PRIDE"};
-		int calcvalue{};
-		
-		cin.getline(response, 50);		
-		
-		for(size_t i{0}; i < strlen(response); ++i) {
-          if(isalpha(response[i]))
-              response[i] = toupper(response[i]);
-		}
-      //cout << "--------------------------------" << endl;
-      strcpy(temp, response);
-
-      if(strcmp(temp, control) == 0){
-		  calcvalue = sizeof(response) - 30;
-		  //cout << "Value is: " << calcvalue << endl;
-
-	  } 
-	  else if(strcmp(temp, control2) == 0){
-			  calcvalue = sizeof(response) - 40;
-		  }
-	  else
-		  calcvalue = sizeof(response) - 37;
-		  //cout << "value is: " << calcvalue << endl;
-		  
-	  call_Uno_2(calcvalue);
-      //cout << "--------------------------------" << endl;
-return calcvalue;
-}
-
-int response_one_3(){
-		cout << "\n   q__ (@?@) __p -- Does the end justify the means or do you reap what you sow?" << endl;
-		cout << "\n type: (the end) or (you reap)" << endl;
-		char response[50]{};
-		char temp[50]{};
-		char control[50]{"THE END"};
-		char control2[50]{"YOU REAP"};
-		int calcvalue{};
-		
-		cin.getline(response, 50);		
-		
-		for(size_t i{0}; i < strlen(response); ++i) {
-          if(isalpha(response[i]))
-              response[i] = toupper(response[i]);
-		}
-      //cout << "--------------------------------" << endl;
-      strcpy(temp, response);
-
-      if(strcmp(temp, control) == 0){
-		  calcvalue = sizeof(response) - 25;
-		  //cout << "Value is: " << calcvalue << endl;
-
-	  }
-	  else if(strcmp(temp, control2) == 0){
-			  calcvalue = sizeof(response) - 35;
-		  }
-
-	else
-		  calcvalue = sizeof(response) - 17;
-		  //cout << "value is: " << calcvalue << endl;
-		  
-	  call_Uno_3(calcvalue);
-      //cout << "--------------------------------" << endl;
-return calcvalue;
-}
-
-int response_one_4(){
-		cout << "\n   q__ (@?@) __p -- Would you rather be immortal or choose any date to die?" << endl;
-		cout << "\n type: (immortal) or (any date)" << endl;
-		char response[50]{};
-		char temp[50]{};
-		char control[50]{"IMMORTAL"};
-		char control2[50]{"ANY DATE"};
-		int calcvalue{};
-		
-		cin.getline(response, 50);		
-		
-		for(size_t i{0}; i < strlen(response); ++i) {
-          if(isalpha(response[i]))
-              response[i] = toupper(response[i]);
-		}
-      //cout << "--------------------------------" << endl;
-      strcpy(temp, response);
-
-      if(strcmp(temp, control) == 0){
-		  calcvalue = sizeof(response) - 12;
-		  //cout << "Value is: " << calcvalue << endl;
-
-	  } 
-	  else if(strcmp(temp, control2) == 0){
-			  calcvalue = sizeof(response) - 32;
-		  }
-	  else
-		  calcvalue = sizeof(response) - 27;
-		  //cout << "value is: " << calcvalue << endl;
-		  
-	  call_Uno_4(calcvalue);
-      //cout << "--------------------------------" << endl;
-
-return calcvalue;
-}
-
-//Second array.
-
-int response_two_0(){
-		cout << "\n   q__ (@?@) __p -- would you have unlimited strength or unlimited knowledge?" << endl;
-		cout << "\n type: (unlimited strength) or (unlimited knowledge)" << endl;
-		
-		char response[50]{};
-		char temp[50]{};
-		char control[50]{"UNLIMITED STRENGTH"};
-		char control2[50]{"UNLIMITED KNOWLEDGE"};
-		int calcvalue{};
-		
-		cin.getline(response, 50);		
-		
-		for(size_t i{0}; i < strlen(response); ++i) {
-          if(isalpha(response[i]))
-              response[i] = toupper(response[i]);
-		}
-      //cout << "--------------------------------" << endl;
-      strcpy(temp, response);
-
-      if(strcmp(temp, control) == 0){
-		  calcvalue = sizeof(response) - 22;
-		  //cout << "Value is: " << calcvalue << endl;
-
-	  } 
-	  else if(strcmp(temp, control2) == 0){
-			  calcvalue = sizeof(response) - 42;
-		  }
-	  else
-		  calcvalue = sizeof(response) - 28;
-		  //cout << "value is: " << calcvalue << endl;
-		  
-	  call_Does_0(calcvalue);
-      //cout << "--------------------------------" << endl;
-
-return calcvalue;
-}
-
-int response_two_1(){
-		cout << "\n   q__ (@?@) __p -- Fight to the death or live to fight another day?" << endl;
-		cout << "\n type: (the death) or (another day)" << endl;
-		char response[50]{};
-		char temp[50]{};
-		char control[50]{"THE DEATH"};
-		char control2[50]{"ANOTHER DAY"};
-		int calcvalue{};
-		
-		cin.getline(response, 50);		
-		
-		for(size_t i{0}; i < strlen(response); ++i) {
-          if(isalpha(response[i]))
-              response[i] = toupper(response[i]);
-		}
-      //cout << "--------------------------------" << endl;
-      strcpy(temp, response);
-
-      if(strcmp(temp, control) == 0){
-		  calcvalue = sizeof(response) - 7;
-		  //cout << "Value is: " << calcvalue << endl;
-
-	  } 
-	  else if(strcmp(temp, control2) == 0){
-			  calcvalue = sizeof(response) - 17;
-		  }
-	  else
-		  calcvalue = sizeof(response) - 34;
-		  //cout << "value is: " << calcvalue << endl;
-		  
-	  call_Does_1(calcvalue);
-      //cout << "--------------------------------" << endl;
-
-return calcvalue;
-}
-
-int response_two_2(){
-		cout << "\n   q__ (@?@) __p -- in isolation, would you rather have every book ever written or a projector with every film ever made?" << endl;
-		cout << "\n type: (books) or (films)" << endl;
-		char response[50]{};
-		char temp[50]{};
-		char control[50]{"BOOKS"};
-		char control2[50]{"FILMS"};
-		int calcvalue{};
-		
-		cin.getline(response, 50);		
-		
-		for(size_t i{0}; i < strlen(response); ++i) {
-          if(isalpha(response[i]))
-              response[i] = toupper(response[i]);
-		}
-      //cout << "--------------------------------" << endl;
-      strcpy(temp, response);
-
-      if(strcmp(temp, control) == 0){
-		  calcvalue = sizeof(response) - 3;
-		  //cout << "Value is: " << calcvalue << endl;
-
-	  } 
-	  else if(strcmp(temp, control2) == 0){
-			  calcvalue = sizeof(response) - 33;
-		  }
-	  else
-		  calcvalue = sizeof(response) - 21;
-		  //cout << "value is: " << calcvalue << endl;
-		  
-	  call_Does_2(calcvalue);
-      //cout << "--------------------------------" << endl;
-
-return calcvalue;
-}
-
-void welcome_seekers(){
-	cout << "\n            * v * v *      I am BIG THINK an autonomous, artificial, official intelligence " << endl;
-	cout << "\n          q__ (@?@) __p     designed to solve the ultimate questions " << endl; 
-	cout << "\n        |   |  +++  |   |          You will need to answer MY questions then I'll give you the ULTIMATE MATRIX" << endl;
-	cout << "\n =============================================================================================================" << endl;
-	
-}
-
-void print(const int *const arr, size_t size) {
-    cout << "[ ";
-    for (size_t i{0}; i<size;++i)
-        cout << arr[i] << " ";
-    cout <<  "]";
-    cout << endl;
-}
-
-int main() {
-	
-	welcome_seekers();
-	cout << "   q__ (@?@) __p --  To perform the operation, we will need to fill two arrays: " << endl;
-	cout << "\n1) ";
-	print(Uno, Uno_size);
-	cout << "\n2) ";
-	print(Does, Does_size);
-	cout << "\n   q__ (@?@) __p --  To do this, I will ask you a number of questions.  I will then calculate your ultimate matrix!" << endl;
-	cout << "\n   q__ (@?@) __p --  If you're ready, we can begin!" << endl;
-	cout << "\n=======================================================================" << endl;
-
-	//input numbers into the first array.
-	response_one_0();
-	response_one_1();
-	response_one_2();
-	response_one_3();
-	response_one_4();
-	
-
-cout << "\n --------------------------------------" << "\n";
-	//input numbers into the second array.
-	response_two_0();
-	response_two_1();
-	response_two_2();
-
-
-cout << "\n -----------------------------" << "\n";
-
-int *results = apply_all(Uno, Uno_size, Does, Does_size);
-constexpr size_t results_size {Uno_size * Does_size};
-    
-    cout << "Result: " ;
-    print(results,results_size);
-	cout << "\n   q__ (@?@) __p --  This is your ultimate matrix.  These numbers contain the answer to your life's mystery!" << endl;
-	cout << "\n" << endl;
-    
-
-
-delete[]results;
-	cout << endl;
-	return 0;
-}
-
-int *apply_all(int a[], size_t a_size, int b[], size_t b_size){
-	int *aPtr{a};
-	int *bPtr{b};
-	int *resuPtr{nullptr};
-	
-	resuPtr = new int[a_size * b_size];
-	int bridge{0};
-		
-    for (size_t i{0}; i < b_size; ++i) {
-        for (size_t j{0}; j< a_size; ++j) {
-            resuPtr[bridge] = a[j] * b[i];
-            ++bridge;
+void get_nums(vector<int> &crunch){
+    cout << "Please load the Cruncher" << endl;
+    cout << "========================" << endl;
+    int nums {};
+    cout << "\nHow many numbers would you like to enter? ";
+    cin >> nums;
+        ill_fate();
+        
+    for(int i{1}; i <= nums; ++i) {
+//  created variable 'i' for iteratation through the variable 'nums'
+        int crunch_items{};
+        cout << "\nPlease enter your number " << i << ": ";
+        cin >> crunch_items;
+        crunch.push_back(crunch_items);
+        
         }
-    }
-    return resuPtr;
+        cout << "You entered:" << " ";
+        for(auto crunches: crunch) {
+            cout << crunches << " ";
+        }
 }
+
+int get_smallest(const vector<int> &crunch){
+    int smallest = crunch.at(0);
+    for (auto crunches: crunch) 
+        if (crunches < smallest)
+            smallest = crunches;
+    return smallest;
+}
+
+int get_largest(const vector<int> &crunch){
+    int largest = crunch.at(0);
+    for (auto crunches: crunch) 
+        if (crunches < largest)
+            largest = crunches;
+    return largest;
+}
+
+int calculate_total(const vector<int> &crunch){
+    int total {};
+    for(auto crunches: crunch){
+        total += crunches; 
+    }    
+        return total;
+    
+}
+
+int calculate_mean(const vector<int> &crunch){
+        int total {};
+    for (auto crunches: crunch)
+        total += crunches;
+    return static_cast<double>(total)/crunch.size();
+
+}
+
+void handle_add(vector<int> &crunch){
+    int nums {};
+    cout << "\nHow many numbers would you like to enter? ";
+    cin >> nums;
+        ill_fate();
+        
+    for(int i{1}; i <= nums; ++i) {
+//  created variable 'i' for iteratation through the variable 'nums'
+        int crunch_items{};
+        cout << "\nPlease enter your number " << i << ": ";
+        cin >> crunch_items;
+        crunch.push_back(crunch_items);
+        
+        }
+        cout << "You entered:" << " ";
+        for(auto crunches: crunch) {
+            cout << crunches << " ";
+        }
+}
+void handle_find(const vector<int> &crunch){
+    int search;
+        cout << "What number are you looking for? ";
+        cin >> search;
+            for(int i = 0; i != search; ++i){
+                if(crunch[i] == search){
+                    cout << "YOur number is in the cruncher";
+                
+            }else
+                cout << "That number is not in the cruncher";
+    }
+}
+void handle_largest(const vector<int> &crunch){
+    if (crunch.size() == 0)
+        cout << "Unable to determine the largest - list is empty" << endl;
+    else    
+        cout << "The largest element in the list is " << get_largest(crunch) << endl;
+}
+
+void handle_smallest(const vector<int> &crunch){
+    
+     if (crunch.size() == 0)
+        cout << "Unable to determine the smallest - list is empty" << endl;
+    else    
+        cout << "The smallest element in the list is " << get_smallest(crunch) << endl;
+}
+
+void handle_mean(const vector<int> &crunch){
+        if (crunch.size() == 0)
+        cout << "Unable to calculate mean - list is empty" << endl;
+    else    
+        cout << "The mean is " << calculate_mean(crunch) << endl;
+}
+void handle_printr(const vector<int> &crunch){
+    if(crunch.size() == 0){
+        cout << "The list is empty";
+    }
+    else {
+    for(auto crunches: crunch){
+        cout << "[ " << crunches << " " << "]";
+    }
+    }
+}
+
+void handle_total(vector<int> &crunch){
+        if(crunch.size() == 0){
+            cout << "The list is empty";
+        }
+        else {
+            cout << "The total sum is: " << calculate_total(crunch);
+        }
+}
+
+void menu_sel(){
+                cout << "\n======================" << endl;
+                cout << "T- Total sum of numbers " << endl;
+                cout << "P- Print numbers " << endl;
+                cout << "A- Add numbers " << endl;
+                cout << "M- Display mean of numbers " << endl;
+                cout << "S- Display smallest of numbers " << endl;
+                cout << "L- Display largest of numbers " << endl;
+                cout << "C- Clear the cruncher " << endl;
+                cout << "F- Find a number " << endl;
+                cout << "Q- Quit " << endl;
+                cout << "U- Reload menu " << endl;
+                cout << "\nEnter your selection: ";
+}
+
+void ill_fate(){
+ 
+while (cin.fail()){
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+        cout << "    ||You can only enter numbers...||\n";
+        }
+}
+
+
+
+int main(){
+    vector<int> crunch{};
+        get_nums(crunch);
+        menu_sel();
+        //vector <int> crunch{};
+        
+                    char selection {};
+            do {
+
+                cin >> selection;
+                
+                if(selection == 'T' || selection == 't'){
+                    handle_total(crunch);
+                }
+                
+                else if(selection == 'p' || selection == 'P'){
+                    handle_printr(crunch);
+
+                }
+                else if(selection == 'a' || selection == 'A'){
+                    handle_add(crunch);
+                    
+                }
+                else if(selection == 'm' || selection == 'M'){
+                    handle_mean(crunch);
+                }
+                else if(selection == 's' || selection == 'S'){
+                    handle_smallest(crunch);
+                }
+                else if(selection == 'l' || selection == 'L'){
+                    handle_largest(crunch);   
+                } 
+                else if(selection == 'c' || selection == 'C'){
+                    crunch.clear();
+                    cout << "The cruncher now holds: " << crunch.size() << " items" << endl;
+                }  
+                else if(selection == 'f' || selection == 'F'){
+                    handle_find(crunch);
+                }
+                else if(selection == 'u' || selection == 'U'){
+                    menu_sel();
+                }
+                else if(selection == 'q' || selection == 'Q')
+                    cout << "\nGoodbye " << endl;
+                    else
+                        cout << "Not an option, try again..." << endl;
+            } while(selection != 'q' && selection != 'Q');   
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
